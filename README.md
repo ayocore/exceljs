@@ -17,9 +17,15 @@ A stripped-down, security-hardened fork of ExcelJS optimized for backend use. Re
 - **`dayjs`** -- was unused, removed
 - **`core-js`, `regenerator-runtime`** -- not needed on modern Node.js
 
+### Upgraded
+
+- **`archiver`** 5 -> 7 -- removed deprecated `glob@7` and `inflight` from transitive deps
+- **`unzipper`** 0.10 -> 0.12 -- removed deprecated `fstream` and `rimraf@2` from transitive deps
+- **Streaming reader fix** -- fixed shared strings race condition when worksheet entries arrive before shared strings in the zip (fixes issue #1328)
+
 ### Security
 
-| Metric               | upstream exceljs 4.4.0 | @ayocore/exceljs 5.0.0 |
+| Metric               | upstream exceljs 4.4.0 | @ayocore/exceljs 5.0.2 |
 |----------------------|------------------------|-------------------------|
 | `npm audit` total    | 48                     | 3 (mocha dev-only)      |
 | Critical             | 3                      | 0                       |
@@ -28,7 +34,7 @@ A stripped-down, security-hardened fork of ExcelJS optimized for backend use. Re
 
 ### Lighter
 
-| Metric               | upstream exceljs 4.4.0 | @ayocore/exceljs 5.0.0 |
+| Metric               | upstream exceljs 4.4.0 | @ayocore/exceljs 5.0.2 |
 |----------------------|------------------------|-------------------------|
 | Runtime dependencies | 9                      | 6                       |
 | Package size         | ~2.5 MB                | ~1 MB                   |
