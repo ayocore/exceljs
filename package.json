@@ -1,16 +1,16 @@
 {
   "name": "@ayocore/exceljs",
   "version": "5.0.1",
-  "description": "Excel Workbook Manager - Read and Write xlsx and csv Files.",
+  "description": "Lightweight Node.js-only fork of ExcelJS for server-side XLSX generation.",
   "private": false,
   "license": "MIT",
   "author": {
-    "name": "Guyon Roche",
+    "name": "Guyon Roche (original), Ayocore (fork)",
     "email": "guyon@live.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/exceljs/exceljs.git"
+    "url": "https://github.com/ayocore/exceljs.git"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -22,7 +22,6 @@
     "excel.js",
     "LICENSE",
     "README.md",
-    "README_zh.md",
     "index.ts",
     "index.d.ts"
   ],
