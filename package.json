@@ -1,6 +1,6 @@
 {
   "name": "@ayocore/exceljs",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Lightweight Node.js-only fork of ExcelJS for server-side XLSX generation.",
   "private": false,
   "license": "MIT",
