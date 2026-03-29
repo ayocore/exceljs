@@ -264,6 +264,39 @@ describe('Cell', () => {
     expect(a1.font).to.deep.equal(fonts.arialBlackUI14);
   });
 
+  it('does not mutate shared style objects when setting style', () => {
+    sheetMock.getRow(1);
+    sheetMock.getColumn(1);
+
+    const a1 = sheetMock.getCell('A1');
+    const a2 = sheetMock.getCell('A2');
+
+    // both cells share the same style object initially
+    const sharedStyle = {font: {name: 'Arial', size: 12}};
+    a1.style = sharedStyle;
+    a2.style = sharedStyle;
+
+    // changing a1's font should not affect a2
+    a1.font = {name: 'Courier', size: 10};
+
+    expect(a2.style.font).to.deep.equal({name: 'Arial', size: 12});
+    expect(a1.font).to.deep.equal({name: 'Courier', size: 10});
+  });
+
+  it('does not mutate style when setting fill', () => {
+    sheetMock.getRow(1);
+    sheetMock.getColumn(1);
+
+    const a1 = sheetMock.getCell('A1');
+    const originalStyle = a1.style;
+
+    a1.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFF0000'}};
+
+    // style should be a new object, not the same reference
+    expect(a1.style).to.not.equal(originalStyle);
+    expect(a1.fill.type).to.equal('pattern');
+  });
+
   it('inherits row styles', () => {
     const row = sheetMock.getRow(1);
     sheetMock.getColumn(1);
@@ -331,9 +364,7 @@ describe('Cell', () => {
 
     a1.value = '<script>alert("yoohoo")</script>';
 
-    expect(a1.html).to.equal(
-      '&lt;script&gt;alert(&quot;yoohoo&quot;)&lt;/script&gt;'
-    );
+    expect(a1.html).to.equal('&lt;script&gt;alert(&quot;yoohoo&quot;)&lt;/script&gt;');
   });
   it('can set comment', () => {
     const a1 = sheetMock.getCell('A1');
@@ -398,12 +429,7 @@ describe('Cell', () => {
     expect(a1.model.comment.note.texts).to.deep.equal(comment.texts);
     expect(a1.model.comment.note.protection).to.deep.equal(comment.protection);
     expect(a1.model.comment.note.margins.insetmode).to.equal('auto');
-    expect(a1.model.comment.note.margins.inset).to.deep.equal([
-      0.13,
-      0.13,
-      0.25,
-      0.25,
-    ]);
+    expect(a1.model.comment.note.margins.inset).to.deep.equal([0.13, 0.13, 0.25, 0.25]);
     expect(a1.model.comment.note.editAs).to.equal('absolute');
   });
 });

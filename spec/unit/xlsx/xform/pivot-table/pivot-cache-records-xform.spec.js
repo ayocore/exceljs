@@ -63,6 +63,25 @@ describe('PivotCacheRecordsXform', () => {
     expect(xml).to.contain('<s v="hello" />');
   });
 
+  it('renders missing element for null/undefined values', () => {
+    const xform = new PivotCacheRecordsXform();
+    const xmlStream = new XmlStream();
+
+    const mockSheet = {
+      getSheetValues() {
+        return [undefined, [undefined, 'Col'], [undefined, null]];
+      },
+    };
+
+    xform.render(xmlStream, {
+      sourceSheet: mockSheet,
+      cacheFields: [{name: 'Col', sharedItems: null}],
+    });
+
+    const {xml} = xmlStream;
+    expect(xml).to.contain('<m />');
+  });
+
   it('throws when value not found in shared items', () => {
     const xform = new PivotCacheRecordsXform();
     const xmlStream = new XmlStream();

@@ -21,6 +21,28 @@ describe('CacheField', () => {
     });
   });
 
+  describe('XML escaping', () => {
+    it('escapes special characters in field name', () => {
+      const field = new CacheField({name: 'Johnson & Johnson', sharedItems: null});
+      const xml = field.render();
+      expect(xml).to.contain('name="Johnson &amp; Johnson"');
+    });
+
+    it('escapes special characters in shared items', () => {
+      const field = new CacheField({name: 'Data', sharedItems: ['<value>', 'A&B', '"quoted"']});
+      const xml = field.render();
+      expect(xml).to.contain('&lt;value&gt;');
+      expect(xml).to.contain('A&amp;B');
+      expect(xml).to.contain('&quot;quoted&quot;');
+    });
+
+    it('handles null in escapeXml', () => {
+      const field = new CacheField({name: 'Test', sharedItems: null});
+      expect(field.escapeXml(null)).to.equal('');
+      expect(field.escapeXml(undefined)).to.equal('');
+    });
+  });
+
   describe('integer type', () => {
     it('renders without shared items', () => {
       const field = new CacheField({name: 'Amount', sharedItems: null});

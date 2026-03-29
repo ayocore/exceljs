@@ -141,11 +141,7 @@ describe('Worksheet', () => {
       table.addRow([new Date('2019-08-05'), 5, 'Bird']);
       table.commit();
 
-      const newValues = spliceArray(values, 5, 0, [
-        new Date('2019-08-05'),
-        5,
-        'Bird',
-      ]);
+      const newValues = spliceArray(values, 5, 0, [new Date('2019-08-05'), 5, 'Bird']);
       checkTable('A1', ws, newValues);
     });
 
@@ -179,17 +175,8 @@ describe('Worksheet', () => {
       );
       table.commit();
 
-      const colValues = [
-        'Letter',
-        'a',
-        'b',
-        'c',
-        'd',
-        {formula: 'ROW()', result: 6},
-      ];
-      const newValues = values.map((rVals, i) =>
-        spliceArray(rVals, 2, 0, colValues[i])
-      );
+      const colValues = ['Letter', 'a', 'b', 'c', 'd', {formula: 'ROW()', result: 6}];
+      const newValues = values.map((rVals, i) => spliceArray(rVals, 2, 0, colValues[i]));
       checkTable('A1', ws, newValues);
     });
 
@@ -211,6 +198,43 @@ describe('Worksheet', () => {
       ]);
 
       checkTable('A1', ws, newValues);
+    });
+
+    it('addRow updates tableRef and autoFilterRef', () => {
+      const wb = new Excel.Workbook();
+      const ws = wb.addWorksheet('blort');
+      const table = addTable('A1', ws);
+
+      const refBefore = table.table.tableRef;
+      table.addRow([new Date('2019-08-05'), 5, 'New']);
+
+      // tableRef should have expanded by one row
+      expect(table.table.tableRef).to.not.equal(refBefore);
+
+      const decoded = colCache.decode(table.table.tableRef);
+      // original: header + 4 data + totals = 6 rows, now + 1 = 7
+      expect(decoded.bottom - decoded.top + 1).to.equal(7);
+    });
+
+    it('removeRows updates tableRef', () => {
+      const wb = new Excel.Workbook();
+      const ws = wb.addWorksheet('blort');
+      const table = addTable('A1', ws);
+
+      table.removeRows(0, 2);
+
+      const decoded = colCache.decode(table.table.tableRef);
+      // original: 6 rows, removed 2 data rows = 4
+      expect(decoded.bottom - decoded.top + 1).to.equal(4);
+    });
+
+    it('autoFilterRef covers only header row', () => {
+      const wb = new Excel.Workbook();
+      const ws = wb.addWorksheet('blort');
+      const table = addTable('A1', ws);
+
+      const decoded = colCache.decode(table.table.autoFilterRef);
+      expect(decoded.top).to.equal(decoded.bottom);
     });
   });
 });
