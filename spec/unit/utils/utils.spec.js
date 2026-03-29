@@ -15,9 +15,7 @@ describe('utils', () => {
         )
       ).to.equal('abc abc');
 
-      expect(
-        utils.xmlEncode('<a href="www.whatever.com">Talk to the H&</a>')
-      ).to.equal(
+      expect(utils.xmlEncode('<a href="www.whatever.com">Talk to the H&</a>')).to.equal(
         '&lt;a href=&quot;www.whatever.com&quot;&gt;Talk to the H&amp;&lt;/a&gt;'
       );
 
@@ -64,6 +62,21 @@ describe('utils', () => {
       const dateConverted = utils.excelToDate(excelDate, false);
 
       expect(dateConverted).to.deep.equal(myDate);
+    });
+
+    it('should return non-numeric values unchanged', () => {
+      expect(utils.excelToDate('hello', false)).to.equal('hello');
+      expect(utils.excelToDate(undefined, false)).to.equal(undefined);
+      expect(utils.excelToDate(null, false)).to.equal(null);
+    });
+
+    it('should return NaN unchanged', () => {
+      const result = utils.excelToDate(NaN, false);
+      expect(Number.isNaN(result)).to.be.true();
+    });
+
+    it('should return Infinity unchanged', () => {
+      expect(utils.excelToDate(Infinity, false)).to.equal(Infinity);
     });
   });
 });
