@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: ['**']
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   test:
     timeout-minutes: 10
@@ -23,7 +26,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
       - run: npm install
       - run: npm test
         env:
@@ -39,7 +41,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - run: npm install
       - run: npm run benchmark
         env:
@@ -55,7 +56,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - run: npm install
       - run: npx tsc index.d.ts
         env:
