@@ -13,7 +13,7 @@
     "url": "https://github.com/ayocore/exceljs.git"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "main": "./excel.js",
   "types": "./index.d.ts",
